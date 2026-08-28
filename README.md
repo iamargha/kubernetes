@@ -23,6 +23,11 @@
 - k get pod pod-name
 
   to see the details of the pod with the pod-name.\
+
+- **watch -n 1 "k get pods"**
+
+  to run the above commands in 1 sec interval
+  
 ##  Deployment
 -  **k create deployment my-dep --image=nginx --replicas=3**
   
