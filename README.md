@@ -40,5 +40,71 @@
 - **k get deployment deployment-name**
 
   to get the details of the deployment
+
+##Namespaces
+
+- Get Namespaces
+
+```
+root@controlplane:~$ k get namespaces
+NAME                 STATUS   AGE
+cilium-secrets       Active   9d
+default              Active   9d
+kube-node-lease      Active   9d
+kube-public          Active   9d
+kube-system          Active   9d
+local-path-storage   Active   9d
+```
+- Create Namespace
+
+```
+root@controlplane:~$ k create namespace dev-namespace 
+namespace/dev-namespace created
+root@controlplane:~$ k get namespaces
+NAME                 STATUS   AGE
+cilium-secrets       Active   9d
+default              Active   9d
+**dev-namespace**        Active   5s
+kube-node-lease      Active   9d
+kube-public          Active   9d
+kube-system          Active   9d
+local-path-storage   Active   9d
+
+```
+- creating the pod inside your created namespace
+
+```
+root@controlplane:~$ k run nginx --image=nginx -n dev-namespace 
+pod/nginx created
+```
+- To see the newly created pods 
+
+```
+but when do you run k get pods, it will not return anything as, it shows the data from the default namespace
+root@controlplane:~$ k get pods
+No resources found in **default** namespace.
+
+You need to specify the namespace to get the pods
+
+root@controlplane:~$ k get pods -n **dev-namespace**
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          17s
+```
+- Setting Namespaces as default
+
+```
+root@controlplane:~$ k config set-context -h |less
+
+root@controlplane:~$ k config set-context -n dev-namespace
+error: you must specify a non-empty context name or --current
+
+root@controlplane:~$ k config set-context -n dev-namespace --current
+Context "kubernetes-admin@kubernetes" modified.
+
+Once the dev-namespace is set as default namespace, now when do you run k get pods, it will your pod
+
+root@controlplane:~$ k get pods
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          101s
   
-  
+```
